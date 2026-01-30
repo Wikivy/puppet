@@ -1,0 +1,14 @@
+jobrunner: false
+jobrunner::intensive: false
+puppetserver: false
+
+puppet_major_version: 8
+
+puppetserver_hostname: puppet.wikivy.com
+role::salt::minions::salt_master: puppet.wikivy.com
+
+mediawiki::multiversion::versions:
+  '1.45':
+    branch: 'REL1_45'
+    default: true
+

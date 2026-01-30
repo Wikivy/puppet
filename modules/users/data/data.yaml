@@ -1,0 +1,46 @@
+groups:
+  ops:
+    gid: 2000
+    description: roots, sudo everywhere
+    members: [spacetrain31]
+    privileges: ['ALL = (ALL) NOPASSWD: ALL']
+  mediawiki-admins:
+    gid: 2001
+    description: sudo on MediaWiki servers
+    members: []
+    privileges: ['ALL = (www-data) NOPASSWD: ALL',
+                 'ALL = (nginx) NOPASSWD: ALL',
+                 'ALL = (ALL) NOPASSWD: /usr/bin/systemctl * nginx',
+                 'ALL = (ALL) NOPASSWD: /usr/bin/systemctl * php8.4-fpm',
+                 'ALL = (ALL) NOPASSWD: /usr/bin/systemctl * php-fpm',
+                 'ALL = (ALL) NOPASSWD: /usr/bin/puppet agent *',
+                 'ALL = (ALL) NOPASSWD: /bin/journalctl *']
+  mediawiki-roots:
+    gid: 2002
+    description: full root on MediaWiki servers
+    members: []
+    privileges: ['ALL = (ALL) NOPASSWD: ALL']
+  cache-admins:
+    gid: 2003
+    description: limited sudo access on cache proxies
+    members: []
+    privileges: ['ALL = (ALL) NOPASSWD: /usr/bin/varnishadm',
+                 'ALL = (ALL) NOPASSWD: /usr/bin/varnishlog',
+                 'ALL = (ALL) NOPASSWD: /usr/bin/varnishstat',
+                 'ALL = (ALL) NOPASSWD: /usr/sbin/service varnish *',
+                 'ALL = (ALL) NOPASSWD: /usr/bin/systemctl * nginx',
+                 'ALL = (ALL) NOPASSWD: /usr/bin/puppet agent *',
+                 'ALL = (ALL) NOPASSWD: /bin/journalctl *']
+  puppet-users:
+    gid: 2004
+    description: limited access on puppet servers
+    members: []
+    privileges: []
+users:
+  spacetrain31:
+    ensure: present
+    uid: 1012
+    name: spacetrain31
+    realname: spacetrain31
+    ssh_keys: [ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGDG4r1+MeeBcAkyryqc9WxOG75luVmo35QYWGtvSOmY]
+    

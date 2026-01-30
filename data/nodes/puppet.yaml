@@ -1,0 +1,10 @@
+puppetserver: true
+puppetdb_enable: true
+puppetdb_hostname: puppet.wikivy.com
+puppetdb::db_ssl: true
+puppetdb::db_rw_host: puppet.wikivy.com
+postgresql::ssl: true
+puppetserver_hostname: puppet.wikivy.com
+role::salt::minions::salt_master: puppet.wikivy.com
+role::salt::minions::salt_master_key: true
+postgresql::master::locale: 'en_US.UTF-8'
