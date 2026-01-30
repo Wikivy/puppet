@@ -7,9 +7,11 @@ defaults:
   # See https://puppet.com/docs/puppet/latest/environments_about.html for further details on environments.
   # datadir: data
   # data_hash: yaml_data
+  datadir: hieradata
+  data_hash: yaml_data
 hierarchy:
   - name: "Per-node data (yaml version)"
-    path: "nodes/%{::trusted.certname}.yaml"
+    path: "hosts/%{networking.hostname}"
   - name: "Other YAML hierarchy levels"
     paths:
       - "common.yaml"

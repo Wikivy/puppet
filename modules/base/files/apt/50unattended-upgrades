@@ -1,0 +1,29 @@
+Unattended-Upgrade::Origins-Pattern {
+	"o=Debian,n=${distro_codename},l=Debian-Security";
+	"o=grafana,n=stable,l=grafana";
+};
+
+// List of packages to not update (regexp are supported)
+Unattended-Upgrade::Package-Blacklist {
+	"gdnsd";
+	"libc6";
+	"libc6-dev";
+	"libc6-i686";
+	"mariadb-";
+	"php-";
+	"php8.2-";
+	"php8.4-";
+	"puppetdb";
+	"puppet-";
+	"redis-";
+	"varnish";
+};
+
+Unattended-Upgrade::Mail "sre-alerts@wikivy.com";
+Unattended-Upgrade::MailReport "only-on-error";
+
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+
+// Automatically reboot *WITHOUT CONFIRMATION* if
+// the file /var/run/reboot-required is found after the upgrade
+Unattended-Upgrade::Automatic-Reboot "false";

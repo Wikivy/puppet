@@ -3,6 +3,9 @@ class base (
 ) {
  include apt
  include base::packages
+ include base::puppet
+ include base::timezone
+ include base::upgrades
  include users
 
  # Used by salt-user
