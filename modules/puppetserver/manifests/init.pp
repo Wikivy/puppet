@@ -200,7 +200,7 @@ class puppetserver(
         port  => '8140',
     }
 
-    systemd::timer::job { 'git_pull_puppet':
+    systemdlib::timer::job { 'git_pull_puppet':
         ensure          => present,
         description     => 'Pull changes on the puppet repo',
         command         => '/bin/bash -c "cd /etc/puppetlabs/puppet/git && /usr/bin/git pull>/dev/null 2>&1"',
@@ -212,7 +212,7 @@ class puppetserver(
         user            => 'root',
     }
 
-    systemd::timer::job { 'git_pull_ssl':
+    systemdlib::timer::job { 'git_pull_ssl':
         ensure          => present,
         description     => 'Pull changes on the ssl repo',
         command         => '/bin/bash -c "cd /etc/puppetlabs/puppet/ssl-cert && /usr/bin/git pull>/dev/null 2>&1"',
@@ -224,7 +224,7 @@ class puppetserver(
         user            => 'root',
     }
 
-    systemd::timer::job { 'remove_old_puppet_reports':
+    systemdlib::timer::job { 'remove_old_puppet_reports':
         ensure      => present,
         user        => 'root',
         description => 'Removes puppet reports older than 100 minutes.',
@@ -245,7 +245,7 @@ class puppetserver(
         mode    => '0555',
     }
 
-    systemd::timer::job { 'geoipupdate':
+    systemdlib::timer::job { 'geoipupdate':
         ensure                  => present,
         description             => 'Run geoipupdate monthly',
         command                 => '/root/geoipupdate',
@@ -265,7 +265,7 @@ class puppetserver(
         mode    => '0555',
     }
 
-    systemd::timer::job { 'updatesfs':
+    systemdlib::timer::job { 'updatesfs':
         ensure                  => present,
         description             => 'Run updatesfs nightly',
         command                 => '/root/updatesfs',
@@ -288,7 +288,7 @@ class puppetserver(
         mode    => '0555',
     }
 
-    systemd::timer::job { 'listdomains_github_push':
+    systemdlib::timer::job { 'listdomains_github_push':
         ensure                  => present,
         description             => 'Refresh custom domains list from Cloudflare and WikiDiscover hourly',
         command                 => '/usr/local/bin/listdomains',
@@ -299,7 +299,7 @@ class puppetserver(
         user                    => 'root',
         send_mail               => true,
         send_mail_only_on_error => true,
-        send_mail_to            => 'root@wikitide.net',
+        send_mail_to            => 'root@wikivy.com',
     }
 
     monitoring::services { 'puppetserver':
@@ -310,13 +310,4 @@ class puppetserver(
     }
 
     # Backups
-    backup::job { 'sslkeys':
-        ensure   => present,
-        interval => 'Sun *-*-* 06:00:00',
-    }
-
-    backup::job { 'private':
-        ensure   => present,
-        interval => 'Sun *-*-* 03:00:00',
-    }
 }
