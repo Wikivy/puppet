@@ -1,0 +1,17 @@
+---
+icinga::repos::manage_stable: true
+
+icinga::redis::globals::package_name: icinga-redis
+icinga::redis::globals::redis_bin: /usr/bin/icinga-redis-server
+icinga::redis::globals::conf_dir: /etc/icinga-redis
+icinga::redis::globals::log_dir: /var/log/icinga-redis
+icinga::redis::globals::run_dir: /var/run/icinga-redis
+icinga::redis::globals::work_dir: /var/lib/icinga-redis
+icinga::redis::globals::user: icinga-redis
+icinga::redis::globals::group: icinga-redis
+
+icinga::web::apache_cgi_pass_auth: true
+
+icinga::server::logging_type: syslog
+icinga::worker::logging_type: syslog
+icinga::agent::logging_type: syslog

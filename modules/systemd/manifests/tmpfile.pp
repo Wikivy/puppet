@@ -1,46 +1,49 @@
-# == systemd::tmpfile ==
+# Creates a systemd tmpfile
 #
-# This define creates a systemd tmpfiles.d configuration snippet
+# @api public
 #
-# === Parameters ===
-# The resource title is the basename of the resulting config file (the
-# .conf is automatically appended)
+# @see systemd-tmpfiles(8)
 #
-# [*content*]
-#   The content of the file. Required.
-# [*ensure*]
-#   The usual meta-parameter, defaults to present. Valid values are
-#   'absent' and 'present'
-# [*owner*]
-#   The owner of the file. Defaults to root, but can be overridden if
-#   the config file needs to be read by some daemon
-# [*group*]
-#   The group owner of the file. Defaults to root, but can be
-#   overridden if the config file needs to be read by some daemon
+# @param filename
+#   The name of the tmpfile to create
 #
-define systemd::tmpfile(
-    $content,
-    $ensure=present,
-    $owner='root',
-    $group='root',
-){
-    $safe_title = regsubst($title, '[\W_/]', '-', 'G')
-    $conf_path = "/etc/tmpfiles.d/${safe_title}.conf"
+# @param ensure
+#   Whether to drop a file or remove it
+#
+# @param path
+#   The path to the main systemd tmpfiles directory
+#
+# @param content
+#   The literal content to write to the file
+#
+#   * Mutually exclusive with ``$source``
+#
+# @param source
+#   A ``File`` resource compatible ``source``
+#
+#   * Mutually exclusive with ``$limits``
+#
+define systemd::tmpfile (
+  Enum['present', 'absent', 'file'] $ensure   = 'file',
+  Systemd::Dropin                   $filename = $name,
+  Stdlib::Absolutepath              $path     = '/etc/tmpfiles.d',
+  Optional[String]                  $content  = undef,
+  Optional[String]                  $source   = undef,
+) {
+  include systemd::tmpfiles
 
-    file { $conf_path:
-        ensure  => $ensure,
-        content => $content,
-        mode    => '0444',
-        owner   => $owner,
-        group   => $group,
-    }
+  $_tmp_file_ensure = $ensure ? {
+    'present' => 'file',
+    default   => $ensure,
+  }
 
-    if $ensure == 'present' {
-        exec { "Refresh tmpfile ${name}":
-            command     => "/bin/systemd-tmpfiles --create --remove '${conf_path}'",
-            user        => 'root',
-            refreshonly => true,
-            subscribe   => File[$conf_path],
-        }
-    }
+  file { "${path}/${filename}":
+    ensure  => $_tmp_file_ensure,
+    content => $content,
+    source  => $source,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0444',
+    notify  => Class['systemd::tmpfiles'],
+  }
 }

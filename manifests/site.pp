@@ -9,6 +9,11 @@ node 'puppet.wikivy.com' {
   include role::salt
 }
 
+node 'vault.wikivy.com' {
+  include base
+  include role::vault
+}
+
 # ensures all servers have basic class if puppet runs
 node default {
     include base

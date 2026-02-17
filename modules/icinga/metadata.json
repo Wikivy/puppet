@@ -1,0 +1,103 @@
+{
+  "name": "puppet-icinga",
+  "version": "7.1.0",
+  "author": "Vox Pupuli",
+  "summary": "Puppet Module to manage the Icinga Software Stack",
+  "license": "Apache-2.0",
+  "source": "git://github.com/voxpupuli/puppet-icinga",
+  "project_page": "https://github.com/voxpupuli/puppet-icinga",
+  "issues_url": "https://github.com/voxpupuli/puppet-icinga/issues",
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 6.6.0 < 10.0.0"
+    },
+    {
+      "name": "puppetlabs/apt",
+      "version_requirement": ">= 9.2.0 < 11.0.0"
+    },
+    {
+      "name": "puppet/zypprepo",
+      "version_requirement": ">= 4.0.0 < 6.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "9",
+        "10"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "8",
+        "9",
+        "10"
+      ]
+    },
+    {
+      "operatingsystem": "AlmaLinux",
+      "operatingsystemrelease": [
+        "8",
+        "9",
+        "10"
+      ]
+    },
+    {
+      "operatingsystem": "Rocky",
+      "operatingsystemrelease": [
+        "8",
+        "9",
+        "10"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "11",
+        "12"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "22.04",
+        "24.04"
+      ]
+    },
+    {
+      "operatingsystem": "Fedora",
+      "operatingsystemrelease": [
+        "39",
+        "40",
+        "41",
+        "42"
+      ]
+    },
+    {
+      "operatingsystem": "SLES",
+      "operatingsystemrelease": [
+        "15"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 7.9.0 < 9.0.0"
+    },
+    {
+      "name": "openvox",
+      "version_requirement": ">= 7.9.0 < 9.0.0"
+    }
+  ],
+  "tags": [
+    "icinga",
+    "icinga-server",
+    "icinga-worker",
+    "icinga-agent",
+    "monitoring"
+  ]
+}

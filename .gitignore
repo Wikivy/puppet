@@ -4,3 +4,5 @@ modules/mediawiki/files/bin/.coverage
 Htmlcov/*
 .coverage
 .idea
+.librarian
+.tmp

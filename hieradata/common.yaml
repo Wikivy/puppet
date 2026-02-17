@@ -7,6 +7,10 @@ puppet_major_version: 8
 puppetserver_hostname: puppet.wikivy.com
 role::salt::minions::salt_master: puppet.wikivy.com
 
+# vault
+vault_hostname: vault.wikivy.com
+vault_ui_enable: true
+
 mediawiki::multiversion::versions:
   '1.45':
     branch: 'REL1_45'

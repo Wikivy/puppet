@@ -1,5 +1,6 @@
 # === Class base::packages
 class base::packages {
+
     stdlib::ensure_packages([
         'acct',
         'apt-transport-https',
@@ -38,12 +39,12 @@ class base::packages {
     ])
 
     # Get rid of these
-    stdlib::ensure_packages(
+    stdlib::ensure(
         'needrestart',
         { ensure => purged }
     )
 
-    stdlib::ensure_packages(
+    stdlib::ensure(
         [ 'apt-listchanges', 'systemd-timesyncd' ],
         { ensure => absent }
     )

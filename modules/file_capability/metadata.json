@@ -1,0 +1,59 @@
+{
+  "name": "stm-file_capability",
+  "version": "6.0.0",
+  "author": "stm",
+  "summary": "Manage Linux file capabilities with Puppet",
+  "license": "BSD-2-Clause",
+  "source": "https://github.com/smoeding/puppet-file_capability",
+  "project_page": "https://github.com/smoeding/puppet-file_capability",
+  "issues_url": "https://github.com/smoeding/puppet-file_capability/issues",
+  "dependencies": [
+
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "10",
+        "11"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "18.04",
+        "20.04",
+        "22.04"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7",
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "7",
+        "8",
+        "9"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 7.0.0 < 9.0.0"
+    }
+  ],
+  "tags": [
+    "linux",
+    "capability"
+  ],
+  "pdk-version": "3.0.0",
+  "template-url": "pdk-default#3.0.0",
+  "template-ref": "tags/3.0.0-0-g056e50d"
+}
