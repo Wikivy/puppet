@@ -67,17 +67,6 @@ class base::puppet (
     $minute = fqdn_rand($interval, 'puppet_agent_timer')
     $timer_interval = "*:${minute}/${interval}:00"
 
-    systemd::timer_wrapper { 'puppet-agent-timer':
-      ensure => present,
-      user => 'root',
-      command => '/usr/local/sbin/puppet-run',
-      on_start_up_sec => '1min',
-      on_calendar => $timer_interval,
-      service_unit_overrides => {
-          description => "Run Puppet agent every ${interval} minutes",
-      }
-    }
-
     systemdlib::timer::job { 'puppet-agent-timer':
         ensure             => present,
         description        => "Run Puppet agent every ${interval} minutes",

@@ -26,7 +26,7 @@ cf_headers = {
     "Authorization": f"Bearer {CLOUDFLARE_API_TOKEN}",
     "X-Auth-Key": f"{CLOUDFLARE_API_TOKEN}",
     "Content-Type": "application/json",
-    "User-Agent": "wikitide/listdomains.py (operated by WikiTide Foundation Technology Team - https://wikitide.org)"
+    "User-Agent": "wikivy/listdomains.py (operated by Wikivy Foundation Technology Team - https://wikivy.com)"
 }
 
 
@@ -58,7 +58,7 @@ def get_wikidiscover_data():
 
     # Headers for the WikiDiscover API request
     headers = {
-        "User-Agent": "wikitide/listdomains.py (operated by WikiTide Foundation Technology Team - https://wikitide.org)"
+        "User-Agent": "wikivy/listdomains.py (operated by Wikivy Foundation Technology Team - https://wikivy.com)"
     }
     params = {
         'action': 'query',
