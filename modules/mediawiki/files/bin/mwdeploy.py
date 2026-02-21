@@ -12,6 +12,8 @@ import requests
 import socket
 import json
 import sys
+import urllib3
+import warnings
 from langcodes import tag_is_valid
 
 mw_versions = os.popen('/usr/local/bin/getMWVersions').read().strip()
@@ -46,7 +48,7 @@ prod: Environment = {
     'wikiurl': 'meta.wikivy.com',
     'servers': [
         'mw01',
-        'mwtask01',
+        'mwtask01'
     ],
 }
 ENVIRONMENTS: EnvironmentList = {
@@ -86,9 +88,9 @@ def get_extensions_in_pack(pack_name: str) -> list[str]:
     packs = {
         'bundled': ['AbuseFilter', 'CategoryTree', 'Cite', 'CiteThisPage', 'CodeEditor', 'ConfirmEdit', 'DiscussionTools', 'Echo', 'Gadgets', 'ImageMap', 'InputBox', 'Interwiki', 'Linter', 'LoginNotify', 'Math', 'MultimediaViewer', 'Nuke', 'OATHAuth', 'PageImages', 'ParserFunctions', 'PdfHandler', 'Poem', 'ReplaceText', 'Scribunto', 'SpamBlacklist', 'SyntaxHighlight_GeSHi', 'TemplateData', 'TextExtracts', 'Thanks', 'TitleBlacklist', 'VisualEditor', 'WikiEditor'],
         'mleb': ['Babel', 'cldr', 'CleanChanges', 'Translate', 'UniversalLanguageSelector'],
-        'socialtools': ['AJAXPoll', 'Comments', 'ContributionScores', 'HAWelcome', 'ImageRating', 'MediaWikiChat', 'NewSignupPage', 'PollNY', 'QuizGame', 'RandomGameUnit', 'SocialProfile', 'Video', 'VoteNY', 'WikiTextLoggedInOut'],
+        'socialtools': ['AJAXPoll', 'BlogPage', 'Comments', 'ContributionScores', 'HAWelcome', 'ImageRating', 'MediaWikiChat', 'NewSignupPage', 'PollNY', 'QuizGame', 'RandomGameUnit', 'SocialProfile', 'Video', 'VoteNY', 'WikiForum', 'WikiTextLoggedInOut'],
         'universalomega': ['AutoCreatePage', 'DynamicPageList4', 'PortableInfobox', 'Preloader', 'SimpleTooltip'],
-        'wikivy': ['CreateWiki', 'DataDump', 'DiscordNotifications', 'GlobalNewFiles', 'ImportDump', 'IncidentReporting', 'ManageWiki', 'MatomoAnalytics', 'WikivyMagic', 'PDFEmbed', 'RemovePII', 'RequestCustomDomain', 'RottenLinks', 'WikiDiscover', 'UserBlogs', 'SimpleForum'],
+        'wikivy': ['CreateWiki', 'DataDump', 'DiscordNotifications', 'GlobalNewFiles', 'ImportDump', 'IncidentReporting', 'ManageWiki', 'MatomoAnalytics', 'WikivyMagic', 'PDFEmbed', 'RemovePII', 'RequestCustomDomain', 'RottenLinks', 'WikiDiscover'],
     }
     return packs.get(pack_name, [])
 
@@ -185,7 +187,7 @@ def check_up(nolog: bool, Debug: str | None = None, Host: str | None = None, dom
                 '/etc/ssl/localcerts/mwdeploy.crt',
                 '/srv/mediawiki-staging/mwdeploy-client-cert.key',
             )
-        
+
         return requests.get(url, **kwargs)
 
     if verify is False:
@@ -197,6 +199,8 @@ def check_up(nolog: bool, Debug: str | None = None, Host: str | None = None, dom
         'User-Agent': 'wikivy/mwdeploy.py',
     }
     if Debug:
+        warnings.filterwarnings('default', category=urllib3.exceptions.InsecureRequestWarning)
+
         headers['X-Wikivy-Debug'] = Debug
         location = f'{domain}@{Debug}'
 
@@ -205,6 +209,8 @@ def check_up(nolog: bool, Debug: str | None = None, Host: str | None = None, dom
         if debug_access_key:
             headers['X-Wikivy-Debug-Access-Key'] = debug_access_key
     else:
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
         os.environ['NO_PROXY'] = 'localhost'
         domain = 'localhost'
         headers['host'] = f'{Host}'
@@ -440,7 +446,7 @@ def run_process(args: argparse.Namespace, version: str = '') -> list[int]:  # pr
                 stage.append(_construct_git_reset_hard('vendor', version=version))
                 stage.append(_construct_git_pull('vendor', submodules=True, version=version))
                 if not args.world:
-                    stage.append(f'sudo -u {DEPLOYUSER} http_proxy=http://bastion.fsslc.wtnet:8080 composer update --no-dev --quiet')
+                    stage.append(f'sudo -u {DEPLOYUSER} composer update --no-dev --quiet')
                     rsync.append(_construct_rsync_command(time=args.ignore_time, location=f'/srv/mediawiki-staging/{version}/vendor/*', dest=f'/srv/mediawiki/{version}/vendor/'))
                     rsyncpaths.append(f'/srv/mediawiki/{version}/vendor/')
 
@@ -552,8 +558,8 @@ def run_process(args: argparse.Namespace, version: str = '') -> list[int]:  # pr
                 if option == 'world':  # install steps for world
                     option = version
                     os.chdir(_get_staging_path(version))
-                    exitcodes.append(run_command(f'sudo -u {DEPLOYUSER} http_proxy=http://bastion.fsslc.wtnet:8080 composer update --no-dev --quiet'))
-                    rebuild.append(f'sudo -u {DEPLOYUSER} MW_INSTALL_PATH=/srv/mediawiki-staging/{version} php {runner_staging}MirahezeMagic:RebuildVersionCache --save-gitinfo --version={version} --wiki={envinfo["wikidbname"]} --conf=/srv/mediawiki-staging/config/LocalSettings.php')
+                    exitcodes.append(run_command(f'sudo -u {DEPLOYUSER} composer update --no-dev --quiet'))
+                    rebuild.append(f'sudo -u {DEPLOYUSER} MW_INSTALL_PATH=/srv/mediawiki-staging/{version} php {runner_staging}WikivyMagic:RebuildVersionCache --save-gitinfo --version={version} --wiki={envinfo["wikidbname"]} --conf=/srv/mediawiki-staging/config/LocalSettings.php')
                     rsyncpaths.append(f'/srv/mediawiki/cache/{version}/gitinfo/')
                 rsync.append(_construct_rsync_command(time=args.ignore_time, location=f'{_get_staging_path(option)}*', dest=_get_deployed_path(option)))
         non_zero_code(exitcodes, nolog=args.nolog)
@@ -577,7 +583,7 @@ def run_process(args: argparse.Namespace, version: str = '') -> list[int]:  # pr
             if args.lang:
                 lang = f'--lang={args.lang}'
 
-            postinstall.append(f'sudo -u {DEPLOYUSER} php {runner}MirahezeMagic:MergeMessageFileList --quiet --wiki={envinfo["wikidbname"]} --extensions-dir=/srv/mediawiki/{version}/extensions:/srv/mediawiki/{version}/skins --output /srv/mediawiki/config/ExtensionMessageFiles-{version}.php')
+            postinstall.append(f'sudo -u {DEPLOYUSER} php {runner}WikivyMagic:MergeMessageFileList --quiet --wiki={envinfo["wikidbname"]} --extensions-dir=/srv/mediawiki/{version}/extensions:/srv/mediawiki/{version}/skins --output /srv/mediawiki/config/ExtensionMessageFiles-{version}.php')
             rebuild.append(f'sudo -u {DEPLOYUSER} php {runner}/srv/mediawiki/{version}/maintenance/rebuildLocalisationCache.php {lang} --quiet --wiki={envinfo["wikidbname"]}')
 
         for cmd in postinstall:  # cmds to run after rsync & install (like mergemessage)
@@ -729,7 +735,7 @@ if __name__ == '__main__':
     parser.add_argument('--skip-schema-confirm', dest='skip_schema_confirm', action='store_true', help='Skip confirm prompts for extensions with schema changes')
     parser.add_argument('--upgrade-extensions', dest='upgrade_extensions', action=UpgradeExtensionsAction, help='extension(s) to upgrade')
     parser.add_argument('--upgrade-skins', dest='upgrade_skins', action=UpgradeSkinsAction, help='skin(s) to upgrade')
-    parser.add_argument('--upgrade-pack', dest='upgrade_pack', action=UpgradePackAction, choices=['bundled', 'mleb', 'socialtools', 'universalomega', 'wikitide'], help='pack of extensions/skins to upgrade')
+    parser.add_argument('--upgrade-pack', dest='upgrade_pack', action=UpgradePackAction, choices=['bundled', 'mleb', 'socialtools', 'universalomega', 'wikivy'], help='pack of extensions/skins to upgrade')
     parser.add_argument('--servers', dest='servers', action=ServersAction, required=True, help='server(s) to deploy to')
     parser.add_argument('--ignore-time', dest='ignore_time', action='store_true')
     parser.add_argument('--port', dest='port')
