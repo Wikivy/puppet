@@ -22,6 +22,12 @@ As a quick overview, you can email security concerns to security@wikivy.com, or 
 
 This repository is licensed per the MIT. The full license is available in LICENSE.
 
-The repository is made of an assortment of code developed by hand, reusing PuppetLabs Forge and code by the Wikitide Foundation and Wikimedia Foundation. Attributions should exist in module directories if code is fully unmodified or slightly. If attribution is missing, please open a code request adding the attribution, and it will be merged.
+The repository is made of an assortment of code developed by hand, reusing PuppetLabs Forge and code by the Wikitide Foundation, and Wikimedia Foundation. Attributions should exist in module directories if code is fully unmodified or slightly. If attribution is missing, please open a code request adding the attribution, and it will be merged.
 
 This works out of the box as long as Puppet is installed on the local machine. All code is tested and developed on Debian Trixie and is run in production on Debian Trixie.
+
+# Credits
+We use modules from [Wikimedia](https://github.com/wikimedia/operations-puppet) and [Miraheze](https://github.com/miraheze/puppet) licensed under Apache 2 and GPL v3 respecively. A link to the licenses is included below.
+
+[Wikimedia License](https://github.com/wikimedia/operations-puppet/blob/production/LICENSE)
+[Miraheze License](https://github.com/miraheze/puppet/blob/main/LICENSE.md)
